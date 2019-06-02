@@ -29,6 +29,7 @@ RANDOMHAM=$(date +%s|sha256sum|base64|head -c 10)
 RANDOMSPAM=$(date +%s|sha256sum|base64|head -c 10)
 RANDOMVIRUS=$(date +%s|sha256sum|base64|head -c 10)
 PUBLICIP=$(dig +short myip.opendns.com @resolver1.opendns.com)
+MAIL_TMP_DIR="/tmp/zcs" && mkdir -p ${MAIL_TMP_DIR}
 
 echo "==============================================="
 echo "Setting variables and hostname"
@@ -39,9 +40,9 @@ hostnamectl set-hostname ${MAIL_HOSTNAME} &>/dev/null
 #Install a DNS Server
 echo "Installing dnsmasq DNS Server"
 apt update &>/dev/null && apt install dnsmasq -y &>/dev/null
-echo "Installed..."
 
 echo "Configuring DNS Server"
+echo "nameserver 127.0.0.1" > /etc/resolv.conf
 mv /etc/dnsmasq.conf /etc/dnsmasq.conf.old
 
 cat <<EOF >>/etc/dnsmasq.conf
@@ -52,14 +53,10 @@ mx-host=${MAIL_HOSTNAME},0
 address=/${MAIL_HOSTNAME}/${PUBLICIP}
 EOF
 
-echo "nameserver 127.0.0.1" > /etc/resolv.conf
 service dnsmasq restart
-echo "DNS configured..."
 
 ##Preparing the config files to inject
 echo "Creating the Scripts files"
-mkdir /tmp/zcs && cd /tmp/zcs
-touch /tmp/zcs/installZimbraScript
 
 cat <<EOF >/tmp/zcs/installZimbraScript
 AVDOMAIN="${MAIL_HOSTNAME}"
@@ -164,8 +161,6 @@ zimbra_require_interprocess_security="1"
 zimbra_server_hostname="${MAIL_HOSTNAME}"
 INSTALL_PACKAGES="zimbra-core zimbra-ldap zimbra-logger zimbra-mta zimbra-snmp zimbra-store zimbra-apache zimbra-spell zimbra-memcached zimbra-proxy"
 EOF
-    
-touch /tmp/zcs/installZimbra-keystrokes
 
 cat <<EOF >/tmp/zcs/installZimbra-keystrokes
 y
@@ -188,17 +183,16 @@ EOF
 
 echo "Downloading Zimbra Collaboration for Ubuntu 16.04"
 wget ${ZIMBRA_DOWNLOAD_URL} -O /tmp/zcs/zimbra-zcs.tar.gz
-tar -zxvf zimbra-zcs.tar.gz
+tar -C ${MAIL_TMP_DIR} -zxvf zimbra-zcs.tar.gz
 
 echo "Installing Zimbra Collaboration just the Software"
-cd /tmp/zcs/zcs-* && ./install.sh -s < /tmp/zcs/installZimbra-keystrokes
+cd ${MAIL_TMP_DIR}/zcs-* && ./install.sh -s < ${MAIL_TMP_DIR}/installZimbra-keystrokes
 
 echo "Installing Zimbra Collaboration injecting the configuration"
-/opt/zimbra/libexec/zmsetup.pl -c /tmp/zcs/installZimbraScript
-cp /tmp/zcs/installZimbraScript /root
-rm -rf /tmp/zcs
-
+/opt/zimbra/libexec/zmsetup.pl -c ${MAIL_TMP_DIR}/installZimbraScript
 su - zimbra -c "zmcontrol restart"
+
+cp ${MAIL_TMP_DIR}/installZimbraScript /root && rm -rf ${MAIL_TMP_DIR}
 
 echo "===============================================" >> /root/zimbra_installed.txt
 echo "You can access now to your Zimbra Collaboration Server" >> /root/zimbra_installed.txt
