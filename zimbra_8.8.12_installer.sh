@@ -5,7 +5,7 @@ if [[ "$(id -u)" != "0" ]]; then
    exit 1
 fi
 
-if [[ ${1} == "" || ${2} == "" ]] ; then
+if [[ ${1} == "" ]] ; then
     echo "Please, inform the mail server hostname and admin password. e.g. ./install.sh mail.mydomain.com"
     exit 0
 fi
