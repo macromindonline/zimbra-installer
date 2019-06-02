@@ -52,6 +52,7 @@ mx-host=${MAIL_HOSTNAME},0
 address=/${MAIL_HOSTNAME}/${PUBLICIP}
 EOF
 
+echo "nameserver 127.0.0.1" > /etc/resolv.conf
 service dnsmasq restart
 echo "DNS configured..."
 
