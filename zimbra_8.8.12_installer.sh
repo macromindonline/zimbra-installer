@@ -10,11 +10,19 @@ if [[ ${1} == "" ]] ; then
     exit 0
 fi
 
-# Basic packages
-apt update -qq && apt dist-upgrade && apt install vim-nox nload htop atop vim-nox pv ncdu language-pack-pt tmux -y
-
 # Change timezone
 dpkg-reconfigure tzdata
+
+# Basic packages
+apt update -qq && apt dist-upgrade && apt install vim-nox nload htop atop vim-nox pv ncdu language-pack-pt tmux makepasswd rcs perl-doc libio-tee-perl git libmail-imapclient-perl libdigest-md5-file-perl libterm-readkey-perl libfile-copy-recursive-perl build-essential make automake libunicode-string-perl libauthen-ntlm-perl libcrypt-ssleay-perl libdigest-hmac-perl libfile-copy-recursive-perl libio-compress-perl libio-socket-inet6-perl libio-socket-ssl-perl libio-tee-perl libmodule-scandeps-perl libnet-ssleay-perl libpar-packer-perl libreadonly-perl libterm-readkey-perl libtest-pod-perl libtest-simple-perl libunicode-string-perl liburi-perl cpanminus -y
+cpanm JSON::WebToken Test::MockObject Unicode::String Data::Uniqid
+cpanm Crypt::OpenSSL::RSA Dist::CheckConflicts JSON::WebToken::Crypt::RSA Regexp::Common Sys::MemInfo
+
+# Imapsync
+git clone git://github.com/imapsync/imapsync.git
+cd imapsync
+mkdir dist
+make install
 
 if [[ `lsb_release -rs` == "16.04" ]]; then
     ZIMBRA_DOWNLOAD_URL="https://files.zimbra.com/downloads/8.8.12_GA/zcs-8.8.12_GA_3794.UBUNTU16_64.20190329045002.tgz"
@@ -23,7 +31,7 @@ else
     exit 0
 fi
 
-## Preparing all the variables like IP, Hostname, etc, all of them from the container
+## Preparing all the variables
 set -e
 RANDOMHAM=$(date +%s|sha256sum|base64|head -c 10)
 RANDOMSPAM=$(date +%s|sha256sum|base64|head -c 10)
