@@ -190,8 +190,8 @@ y
 EOF
 
 echo "Downloading Zimbra Collaboration for Ubuntu 16.04"
-wget ${ZIMBRA_DOWNLOAD_URL} -O /tmp/zcs/zimbra-zcs.tar.gz
-tar -C ${MAIL_TMP_DIR} -zxvf zimbra-zcs.tar.gz
+wget ${ZIMBRA_DOWNLOAD_URL} -O ${MAIL_TMP_DIR}/zimbra-zcs.tar.gz
+tar -C ${MAIL_TMP_DIR} -zxvf ${MAIL_TMP_DIR}/zimbra-zcs.tar.gz
 
 echo "Installing Zimbra Collaboration just the Software"
 cd ${MAIL_TMP_DIR}/zcs-* && ./install.sh -s < ${MAIL_TMP_DIR}/installZimbra-keystrokes
