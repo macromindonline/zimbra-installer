@@ -200,13 +200,13 @@ echo "Installing Zimbra Collaboration injecting the configuration"
 /opt/zimbra/libexec/zmsetup.pl -c ${MAIL_TMP_DIR}/installZimbraScript
 su - zimbra -c "zmcontrol restart"
 
-cp ${MAIL_TMP_DIR}/installZimbraScript /root && rm -rf ${MAIL_TMP_DIR}
+cp ${MAIL_TMP_DIR}/installZimbraScript ${HOME} && rm -rf ${MAIL_TMP_DIR}
 
-echo "===============================================" >> /root/zimbra_installed.txt
-echo "You can access now to your Zimbra Collaboration Server" >> /root/zimbra_installed.txt
-echo "Mail server hostname: ${MAIL_HOSTNAME}" >> /root/zimbra_installed.txt
-echo "Mail admin username: admin" >> /root/zimbra_installed.txt
-echo "Mail admin password: ${MAIL_SECRET}" >> /root/zimbra_installed.txt
-echo "Admin Console: https://${MAIL_HOSTNAME}:7071 OR https://${PUBLICIP}:7071" >> /root/zimbra_installed.txt
-echo "Web Client: https://${MAIL_HOSTNAME} OR https://${PUBLICIP}" >> /root/zimbra_installed.txt
-echo "===============================================" >> /root/zimbra_installed.txt
+echo "===============================================" >> ${HOME}/zimbra_installed.txt
+echo "You can access now to your Zimbra Collaboration Server" >> ${HOME}/zimbra_installed.txt
+echo "Mail server hostname: ${MAIL_HOSTNAME}" >> ${HOME}/zimbra_installed.txt
+echo "Mail admin username: admin" >> ${HOME}/zimbra_installed.txt
+echo "Mail admin password: ${MAIL_SECRET}" >> ${HOME}/zimbra_installed.txt
+echo "Admin Console: https://${MAIL_HOSTNAME}:7071 OR https://${PUBLICIP}:7071" >> ${HOME}/zimbra_installed.txt
+echo "Web Client: https://${MAIL_HOSTNAME} OR https://${PUBLICIP}" >> ${HOME}/zimbra_installed.txt
+echo "===============================================" >> ${HOME}/zimbra_installed.txt
