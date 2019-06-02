@@ -10,6 +10,12 @@ if [[ ${1} == "" ]] ; then
     exit 0
 fi
 
+# Basic packages
+apt update -qq && apt dist-upgrade && apt install vim-nox nload htop atop vim-nox imapsync pv ncdu language-pack-pt tmux -y
+
+# Change timezone
+dpkg-reconfigure tzdata
+
 if [[ `lsb_release -rs` == "16.04" ]]; then
     ZIMBRA_DOWNLOAD_URL="https://files.zimbra.com/downloads/8.8.12_GA/zcs-8.8.12_GA_3794.UBUNTU16_64.20190329045002.tgz"
 else
