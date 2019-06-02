@@ -190,7 +190,7 @@ echo "Installing Zimbra Collaboration injecting the configuration"
 /opt/zimbra/libexec/zmsetup.pl -c /tmp/zcs/installZimbraScript
 rm -rf /tmp/zcs
 
-su - zimbra -c 'zmcontrol restart'
+su - zimbra -c "zmcontrol restart"
 
 echo "===============================================" >> /root/zimbra_installed.txt
 echo "You can access now to your Zimbra Collaboration Server" >> /root/zimbra_installed.txt
