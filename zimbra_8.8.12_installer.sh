@@ -194,6 +194,7 @@ cd /tmp/zcs/zcs-* && ./install.sh -s < /tmp/zcs/installZimbra-keystrokes
 
 echo "Installing Zimbra Collaboration injecting the configuration"
 /opt/zimbra/libexec/zmsetup.pl -c /tmp/zcs/installZimbraScript
+cp /tmp/zcs/installZimbraScript /root
 rm -rf /tmp/zcs
 
 su - zimbra -c "zmcontrol restart"
