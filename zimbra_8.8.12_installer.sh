@@ -6,14 +6,14 @@ if [[ "$(id -u)" != "0" ]]; then
 fi
 
 if [[ ${1} == "" || ${2} == "" ]] ; then
-    echo 'Please, inform the mail server hostname and admin password. e.g. ./install.sh mail.mydomain.com p4ssw0rd'
+    echo "Please, inform the mail server hostname and admin password. e.g. ./install.sh mail.mydomain.com"
     exit 0
 fi
 
 if [[ `lsb_release -rs` == "16.04" ]]; then
     ZIMBRA_DOWNLOAD_URL="https://files.zimbra.com/downloads/8.8.12_GA/zcs-8.8.12_GA_3794.UBUNTU16_64.20190329045002.tgz"
 else
-    echo 'This installer runs on Ubuntu 16.04'
+    echo "This installer runs on Ubuntu 16.04"
     exit 0
 fi
 
@@ -37,6 +37,7 @@ echo "Installed..."
 
 echo "Configuring DNS Server"
 mv /etc/dnsmasq.conf /etc/dnsmasq.conf.old
+
 cat <<EOF >>/etc/dnsmasq.conf
 server=8.8.8.8
 listen-address=127.0.0.1
@@ -44,14 +45,15 @@ domain=${MAIL_HOSTNAME}
 mx-host=${MAIL_HOSTNAME},0
 address=/${MAIL_HOSTNAME}/${PUBLICIP}
 EOF
+
 service dnsmasq restart
-echo "Configured..."
+echo "DNS configured..."
 
 ##Preparing the config files to inject
 echo "Creating the Scripts files"
 mkdir /tmp/zcs && cd /tmp/zcs
-
 touch /tmp/zcs/installZimbraScript
+
 cat <<EOF >/tmp/zcs/installZimbraScript
 AVDOMAIN="${MAIL_HOSTNAME}"
 AVUSER="admin@${MAIL_HOSTNAME}"
@@ -157,6 +159,7 @@ INSTALL_PACKAGES="zimbra-core zimbra-ldap zimbra-logger zimbra-mta zimbra-snmp z
 EOF
     
 touch /tmp/zcs/installZimbra-keystrokes
+
 cat <<EOF >/tmp/zcs/installZimbra-keystrokes
 y
 y
@@ -171,13 +174,13 @@ y
 y
 y
 y
+n
 y
 y
 EOF
-echo "Created..."
 
 echo "Downloading Zimbra Collaboration for Ubuntu 16.04"
-wget ${ZIMBRA_DOWNLOAD_URL} -O /opt/zimbra-install/zimbra-zcs.tar.gz
+wget ${ZIMBRA_DOWNLOAD_URL} -O /tmp/zcs/zimbra-zcs.tar.gz
 tar -zxvf zimbra-zcs.tar.gz
 
 echo "Installing Zimbra Collaboration just the Software"
@@ -185,13 +188,15 @@ cd /tmp/zcs/zcs-* && ./install.sh -s < /tmp/zcs/installZimbra-keystrokes
 
 echo "Installing Zimbra Collaboration injecting the configuration"
 /opt/zimbra/libexec/zmsetup.pl -c /tmp/zcs/installZimbraScript
+rm -rf /tmp/zcs
+
 su - zimbra -c 'zmcontrol restart'
 
-echo "==============================================="
-echo "You can access now to your Zimbra Collaboration Server"
-echo "Mail server hostname: ${MAIL_HOSTNAME}"
-echo "Mail admin username: admin"
-echo "Mail admin password: ${MAIL_SECRET}"
-echo "Admin Console: https://${MAIL_HOSTNAME}:7071 OR https://${PUBLICIP}:7071"
-echo "Web Client: https://${MAIL_HOSTNAME} OR https://${PUBLICIP}"
-echo "==============================================="
+echo "===============================================" >> /root/zimbra_installed.txt
+echo "You can access now to your Zimbra Collaboration Server" >> /root/zimbra_installed.txt
+echo "Mail server hostname: ${MAIL_HOSTNAME}" >> /root/zimbra_installed.txt
+echo "Mail admin username: admin" >> /root/zimbra_installed.txt
+echo "Mail admin password: ${MAIL_SECRET}" >> /root/zimbra_installed.txt
+echo "Admin Console: https://${MAIL_HOSTNAME}:7071 OR https://${PUBLICIP}:7071" >> /root/zimbra_installed.txt
+echo "Web Client: https://${MAIL_HOSTNAME} OR https://${PUBLICIP}" >> /root/zimbra_installed.txt
+echo "===============================================" >> /root/zimbra_installed.txt
