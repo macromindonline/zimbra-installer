@@ -11,7 +11,7 @@ if [[ ${1} == "" ]] ; then
 fi
 
 # Basic packages
-apt update -qq && apt dist-upgrade && apt install vim-nox nload htop atop vim-nox imapsync pv ncdu language-pack-pt tmux -y
+apt update -qq && apt dist-upgrade && apt install vim-nox nload htop atop vim-nox pv ncdu language-pack-pt tmux -y
 
 # Change timezone
 dpkg-reconfigure tzdata
