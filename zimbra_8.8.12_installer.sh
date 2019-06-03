@@ -16,7 +16,7 @@ dpkg-reconfigure tzdata
 # Basic packages
 apt update -qq && apt dist-upgrade
 apt install vim-nox nload htop atop vim-nox pv ncdu language-pack-pt tmux makepasswd rcs perl-doc libio-tee-perl git libmail-imapclient-perl libdigest-md5-file-perl libclass-load-perl libterm-readkey-perl libdate-manip-perl libdist-checkconflicts-perl libfile-copy-recursive-perl libio-tee-perl libjson-perl libmodule-implementation-perl libmodule-runtime-perl libpackage-stash-perl libpackage-stash-xs-perl libsys-meminfo-perl libtest-fatal-perl libtest-mock-guard-perl libtest-mockobject-perl libtest-requires-perl libtry-tiny-perl libfile-copy-recursive-perl build-essential make automake libunicode-string-perl libauthen-ntlm-perl libcrypt-ssleay-perl libcrypt-openssl-rsa-perl libdigest-hmac-perl libfile-copy-recursive-perl libio-compress-perl libio-socket-inet6-perl libio-socket-ssl-perl libdata-uniqid-perl libio-tee-perl libmodule-scandeps-perl libnet-ssleay-perl libpar-packer-perl libreadonly-perl libterm-readkey-perl libtest-pod-perl libtest-simple-perl libunicode-string-perl liburi-perl cpanminus -y
-cpanm "JSON::WebToken JSON::WebToken::Crypt::RSA"
+cpanm CGI JSON::WebToken JSON::WebToken::Crypt::RSA Regexp::Common Test::NoWarnings Test::Deep Test::Warn
 
 # Imapsync
 git clone git://github.com/imapsync/imapsync.git
